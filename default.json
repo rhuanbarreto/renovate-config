@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:js-app",
+    "group:pulumi",
+    "group:allNonMajor",
+    "schedule:monthly",
+    ":labels(dependencies)"
+  ],
+  "stabilityDays": 15,
+  "automerge": true,
+  "automergeType": "pr",
+  "platformAutomerge": true
+}
