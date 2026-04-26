@@ -1,14 +1,124 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Shared Renovate configuration for the rhuanbarreto organization.",
   "extends": [
-    "config:js-app",
-    "group:pulumi",
-    "group:allNonMajor",
-    "schedule:monthly",
-    ":labels(dependencies)"
+    "config:best-practices",
+    "security:openssf-scorecard",
+    ":automergeRequireAllStatusChecks",
+    ":approveMajorUpdates",
+    ":rebaseStalePrs",
+    ":enableVulnerabilityAlerts",
+    "schedule:nonOfficeHours",
+    "schedule:automergeNonOfficeHours",
+    ":timezone(Europe/Berlin)"
   ],
-  "stabilityDays": 15,
-  "automerge": true,
-  "automergeType": "pr",
-  "platformAutomerge": true
+  "osvVulnerabilityAlerts": true,
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "minimumReleaseAge": "7 days",
+  "configMigration": true,
+  "reviewersFromCodeOwners": true,
+  "labels": ["dependencies"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Extract bun version from .prototools",
+      "managerFilePatterns": ["/^\\.prototools$/"],
+      "matchStrings": ["bun\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "oven-sh/bun",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^bun-v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Extract node version from .prototools",
+      "managerFilePatterns": ["/^\\.prototools$/"],
+      "matchStrings": ["node\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version",
+      "versioningTemplate": "node"
+    },
+    {
+      "customType": "regex",
+      "description": "Extract npm version from .prototools",
+      "managerFilePatterns": ["/^\\.prototools$/"],
+      "matchStrings": ["npm\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "npm",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "Extract gh (GitHub CLI) version from .prototools",
+      "managerFilePatterns": ["/^\\.prototools$/"],
+      "matchStrings": ["gh\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "cli/cli",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Group Bun runtime (.prototools) and @types/bun together",
+      "groupName": "bun",
+      "matchPackageNames": ["oven-sh/bun", "@types/bun"]
+    },
+    {
+      "description": "Group .prototools toolchain updates (node, npm, gh) together",
+      "groupName": "prototools toolchain",
+      "matchPackageNames": ["node", "npm", "cli/cli"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "Group all non-major devDependencies into a single PR per repo",
+      "groupName": "devDependencies (non-major)",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["!@types/bun"]
+    },
+    {
+      "description": "Automerge non-major updates for linting, formatting, and type packages",
+      "matchPackageNames": [
+        "oxlint",
+        "oxfmt",
+        "prettier",
+        "prettier-plugin-astro",
+        "eslint",
+        "@commitlint/{/,}**",
+        "commitizen"
+      ],
+      "matchPackagePatterns": ["^@types/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "description": "Label and require review for major updates",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["major-update"],
+      "automerge": false
+    },
+    {
+      "description": "Label security/vulnerability PRs",
+      "matchCategories": ["security"],
+      "addLabels": ["security"],
+      "minimumReleaseAge": "0 days",
+      "prPriority": 10
+    },
+    {
+      "description": "Pin GitHub Actions to SHA digests for supply-chain security",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
+      "description": "Group GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions"
+    },
+    {
+      "description": "Group docs site dependencies (Astro, Starlight, etc.)",
+      "groupName": "docs dependencies",
+      "matchFileNames": ["docs/package.json"],
+      "separateMajorMinor": false
+    }
+  ]
 }
