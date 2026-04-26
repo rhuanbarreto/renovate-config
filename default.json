@@ -12,6 +12,7 @@
     "schedule:automergeNonOfficeHours",
     ":timezone(Europe/Berlin)"
   ],
+  "semanticCommits": "enabled",
   "osvVulnerabilityAlerts": true,
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
