@@ -11,10 +11,10 @@
     ":timezone(Europe/Berlin)"
   ],
   "schedule": [
-    "before 6am on Sunday on the 25-31 of the month"
+    "* 0-5 25-31 * 0"
   ],
   "automergeSchedule": [
-    "before 6am on Sunday on the 25-31 of the month"
+    "* 0-5 25-31 * 0"
   ],
   "semanticCommits": "enabled",
   "osvVulnerabilityAlerts": true,
