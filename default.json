@@ -8,14 +8,18 @@
     ":approveMajorUpdates",
     ":rebaseStalePrs",
     ":enableVulnerabilityAlerts",
-    "schedule:nonOfficeHours",
-    "schedule:automergeNonOfficeHours",
     ":timezone(Europe/Berlin)"
+  ],
+  "schedule": [
+    "before 6am on Sunday on the 25-31 of the month"
+  ],
+  "automergeSchedule": [
+    "before 6am on Sunday on the 25-31 of the month"
   ],
   "semanticCommits": "enabled",
   "osvVulnerabilityAlerts": true,
-  "prConcurrentLimit": 5,
-  "prHourlyLimit": 2,
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 0,
   "minimumReleaseAge": "7 days",
   "configMigration": true,
   "reviewersFromCodeOwners": true,
@@ -99,10 +103,11 @@
       "automerge": false
     },
     {
-      "description": "Label security/vulnerability PRs",
+      "description": "Label security/vulnerability PRs and bypass the monthly schedule so fixes ship immediately",
       "matchCategories": ["security"],
       "addLabels": ["security"],
       "minimumReleaseAge": "0 days",
+      "schedule": ["at any time"],
       "prPriority": 10
     },
     {

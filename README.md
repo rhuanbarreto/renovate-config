@@ -34,7 +34,7 @@ Extends [`config:best-practices`](https://docs.renovatebot.com/presets-config/#c
 - **7-day minimum release age** for all updates (overrides the 3-day `config:best-practices` default)
 - **OpenSSF Scorecard** badges on PRs for supply-chain visibility
 - **OSV vulnerability alerts** enabled
-- **Vulnerability PRs** skip the release-age delay and get priority `10`
+- **Vulnerability PRs** skip both the release-age delay **and** the monthly schedule (`schedule: ["at any time"]`), and get priority `10`
 - **GitHub Actions pinned to SHA digests**
 - **Major updates require dashboard approval** before PRs are created
 
@@ -44,8 +44,9 @@ Extends [`config:best-practices`](https://docs.renovatebot.com/presets-config/#c
 - **Docs dependencies grouped** into a single PR
 - **GitHub Actions grouped** into a single PR
 - **Linters, formatters, and type packages auto-merged** on minor/patch
-- **Schedule:** PRs created during non-office hours only
-- **Rate limited:** max 5 concurrent PRs, max 2 per hour
+- **Schedule:** PRs created **only on the last Sunday of the month** (Sunday between the 25th and 31st, before 6am Europe/Berlin)
+- **Automerges** are batched into the same monthly window
+- **Rate limited:** max 20 concurrent PRs, no per-hour cap (so the full monthly batch can land in one run)
 
 ### Custom managers -- `.prototools`
 
@@ -88,4 +89,6 @@ Add `packageRules` or `ignorePresets` in the repo's own `renovate.json`:
 | `:enableVulnerabilityAlerts` | Vuln alert PRs |
 | `:automergeRequireAllStatusChecks` | All CI must pass before automerge |
 | `:rebaseStalePrs` | Keep PRs up to date with base |
-| `schedule:nonOfficeHours` | Create PRs outside office hours |
+| `:timezone(Europe/Berlin)` | Schedule timezone |
+
+To opt out of the monthly schedule for a specific repo, override `schedule` and `automergeSchedule` in the repo config.
