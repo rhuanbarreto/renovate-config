@@ -8,7 +8,7 @@
     ":approveMajorUpdates",
     ":rebaseStalePrs",
     ":enableVulnerabilityAlerts",
-    ":timezone(Europe/Berlin)"
+    ":timezone(Europe/Oslo)"
   ],
   "schedule": [
     "* 0-5 25-31 * 0"
@@ -21,51 +21,15 @@
   "prConcurrentLimit": 20,
   "prHourlyLimit": 0,
   "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
   "configMigration": true,
   "reviewersFromCodeOwners": true,
   "labels": ["dependencies"],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Extract bun version from .prototools",
-      "managerFilePatterns": ["/^\\.prototools$/"],
-      "matchStrings": ["bun\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "oven-sh/bun",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^bun-v(?<version>.+)$"
-    },
-    {
-      "customType": "regex",
-      "description": "Extract node version from .prototools",
-      "managerFilePatterns": ["/^\\.prototools$/"],
-      "matchStrings": ["node\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "node",
-      "datasourceTemplate": "node-version",
-      "versioningTemplate": "node"
-    },
-    {
-      "customType": "regex",
-      "description": "Extract npm version from .prototools",
-      "managerFilePatterns": ["/^\\.prototools$/"],
-      "matchStrings": ["npm\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "npm",
-      "datasourceTemplate": "npm"
-    },
-    {
-      "customType": "regex",
-      "description": "Extract gh (GitHub CLI) version from .prototools",
-      "managerFilePatterns": ["/^\\.prototools$/"],
-      "matchStrings": ["gh\\s*=\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "cli/cli",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+)$"
-    }
-  ],
   "packageRules": [
     {
-      "description": "Group Bun runtime (.prototools) and @types/bun together",
+      "description": "Group Bun runtime (.prototools, workflow bun-version) and @types/bun together",
       "groupName": "bun",
-      "matchPackageNames": ["oven-sh/bun", "@types/bun"]
+      "matchPackageNames": ["oven-sh/bun", "@types/bun", "bun"]
     },
     {
       "description": "Group .prototools toolchain updates (node, npm, gh) together",
@@ -116,8 +80,9 @@
       "pinDigests": true
     },
     {
-      "description": "Group GitHub Actions updates",
+      "description": "Group GitHub Actions updates (excluding bun, which groups with .prototools)",
       "matchManagers": ["github-actions"],
+      "excludePackageNames": ["bun"],
       "groupName": "github-actions"
     },
     {

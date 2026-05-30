@@ -44,22 +44,10 @@ Extends [`config:best-practices`](https://docs.renovatebot.com/presets-config/#c
 - **Docs dependencies grouped** into a single PR
 - **GitHub Actions grouped** into a single PR
 - **Linters, formatters, and type packages auto-merged** on minor/patch
-- **Schedule:** PRs created **only on the last Sunday of the month** (Sunday between the 25th and 31st, before 6am Europe/Berlin)
+- **Schedule:** PRs created **only on the last Sunday of the month** (Sunday between the 25th and 31st, before 6am Europe/Oslo)
 - **Automerges** are batched into the same monthly window
 - **Rate limited:** max 20 concurrent PRs, no per-hour cap (so the full monthly batch can land in one run)
-
-### Custom managers -- `.prototools`
-
-Regex custom managers parse tool versions from [proto](https://moonrepo.dev/proto) `.prototools` files:
-
-| Tool | Datasource | Package | Notes |
-| --- | --- | --- | --- |
-| `bun` | `github-releases` | `oven-sh/bun` | Grouped with `@types/bun` |
-| `node` | `node-version` | `node` | Uses `node` versioning (handles loose versions like `"24"`) |
-| `npm` | `npm` | `npm` | Standard npm registry |
-| `gh` | `github-releases` | `cli/cli` | GitHub CLI |
-
-Non-major updates for `node`, `npm`, and `gh` are grouped as **prototools toolchain**.
+- **`internalChecksFilter: "strict"`** — only release PRs that pass all internal checks (e.g., release-age threshold)
 
 ## Overriding for a specific repo
 
@@ -89,6 +77,6 @@ Add `packageRules` or `ignorePresets` in the repo's own `renovate.json`:
 | `:enableVulnerabilityAlerts` | Vuln alert PRs |
 | `:automergeRequireAllStatusChecks` | All CI must pass before automerge |
 | `:rebaseStalePrs` | Keep PRs up to date with base |
-| `:timezone(Europe/Berlin)` | Schedule timezone |
+| `:timezone(Europe/Oslo)` | Schedule timezone |
 
 To opt out of the monthly schedule for a specific repo, override `schedule` and `automergeSchedule` in the repo config.
